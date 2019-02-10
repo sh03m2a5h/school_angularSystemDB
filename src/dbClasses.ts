@@ -22,6 +22,9 @@ export class Book {
       this.title = obj.title;
       this.actor = obj.actor;
       this.date = obj.date;
+      if(obj.detail){
+        this.detail = obj.detail;
+      }
     }
   }
 }

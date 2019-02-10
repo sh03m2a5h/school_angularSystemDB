@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Book = /** @class */ (function () {
     function Book(obj) {
         this.date = new Date;
@@ -9,6 +9,9 @@ var Book = /** @class */ (function () {
             this.title = obj.title;
             this.actor = obj.actor;
             this.date = obj.date;
+            if (obj.detail) {
+                this.detail = obj.detail;
+            }
         }
     }
     Book.schema = {
