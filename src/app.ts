@@ -1,23 +1,26 @@
-import Realm = require('realm');
-import { Server } from  'ws';
-import { Book, BookDetail, RentHistory, Member } from './dbClasses';
+import admin = require('firebase-admin');
+import { Book, BookDetail, Member, RentHistory } from './dbClasses';
+var serviceAccount = require('../key/ateste-js-27fa5020b99d.json');
 
-var ws = new Server({port:5000});
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
-var schemas:Object = {
-  Book: Book,
-  BookDetail: BookDetail,
-  RentHistory: RentHistory,
-  Member: Member
-}
+var db = admin.firestore();
 
-Realm.open({ schema: Object.values(schemas) })
-  .then(realm => {
-    realm.write(() => {
-      let book = realm.objects('Book').filtered('title LIKE "*である*"');
-      console.log(book);
-    });
-  })
-  .catch(error => {
-    console.log(error);
-  });
+var docRef = db.collection('books').doc();
+
+var setBook = docRef.set({
+  isbn: '849302',
+  title: '吾輩は猫である',
+  actor: '夏目漱石',
+  date: new Date('2002-06-04')
+}).then((value)=>{
+  console.log(value);
+}).catch(error =>{
+  console.error(error);
+});
+
+console.log(db.collection('books').get().then((value)=>{
+  console.log(value.query.select(''));
+}))

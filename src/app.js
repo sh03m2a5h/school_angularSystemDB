@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Realm = require("realm");
-var ws_1 = require("ws");
-var dbClasses_1 = require("./dbClasses");
-var ws = new ws_1.Server({ port: 5000 });
-var schemas = {
-    Book: dbClasses_1.Book,
-    BookDetail: dbClasses_1.BookDetail,
-    RentHistory: dbClasses_1.RentHistory,
-    Member: dbClasses_1.Member
-};
-Realm.open({ schema: Object.values(schemas) })
-    .then(function (realm) {
-    realm.write(function () {
-        var book = realm.objects('Book').filtered('title LIKE "*である*"');
-        console.log(book);
-    });
-})
-    .catch(function (error) {
-    console.log(error);
+const admin = require("firebase-admin");
+var serviceAccount = require('../key/ateste-js-27fa5020b99d.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
 });
+var db = admin.firestore();
+var docRef = db.collection('books').doc();
+var setBook = docRef.set({
+    isbn: '849302',
+    title: '吾輩は猫である',
+    actor: '夏目漱石',
+    date: new Date('2002-06-04')
+}).then((value) => {
+    console.log(value);
+}).catch(error => {
+    console.error(error);
+});
+console.log(db.collection('books').get().then((value) => {
+    console.log(value.docs);
+}));
 //# sourceMappingURL=app.js.map

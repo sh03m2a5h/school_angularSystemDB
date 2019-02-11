@@ -5,17 +5,6 @@ export class Book {
   public date = new Date;
   public detail?= new Array<BookDetail>();
   public picture?: ImageBitmap;
-  static schema:Realm.ObjectSchema = {
-    name: 'Book',
-    properties: {
-      isbn: 'string',
-      title: 'string',
-      actor: 'string',
-      date: 'date',
-      detail: 'BookDetail[]',
-      picture: 'data?'
-    }
-  }
   constructor(obj?: Book) {
     if(obj){
       this.isbn = obj.isbn;
@@ -34,16 +23,6 @@ export class Member {
   public tel: string;
   public email: string;
   public id: number;
-  static schema:Realm.ObjectSchema = {
-    name: 'Member',
-    properties: {
-      name: 'string',
-      address: 'string',
-      tel: 'string',
-      email: 'string',
-      id: 'int'
-    }
-  }
   constructor(obj?: Member) {
     if(obj){
       this.name = obj.name;
@@ -58,14 +37,6 @@ export class BookDetail {
   public serial: number;
   public status?: number;
   public date?: Date;
-  static schema:Realm.ObjectSchema = {
-    name: 'BookDetail',
-    properties: {
-      serial: 'int',
-      status: 'Member?',
-      date: 'date?'
-    }
-  };
   constructor(obj?: BookDetail) {
     if(obj){
       this.serial = obj.serial;
@@ -80,16 +51,6 @@ export class RentHistory {
   public bookDetail: BookDetail;
   public type: string;
   public date: Date;
-  static schema:Realm.ObjectSchema = {
-    name: 'RentHistory',
-    properties: {
-      member: 'Member',
-      book: 'Book',
-      bookDetail: 'BookDetail',
-      type: 'string',
-      date: 'date'
-    }
-  };
   constructor(obj?: RentHistory) {
     if(obj){
       this.member = obj.member;
