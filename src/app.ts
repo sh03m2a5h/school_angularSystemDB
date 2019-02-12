@@ -1,26 +1,17 @@
-import admin = require('firebase-admin');
-import { Book, BookDetail, Member, RentHistory } from './dbClasses';
-var serviceAccount = require('../key/ateste-js-27fa5020b99d.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+import mysql = require('mysql');
+import { BookDetail } from './dbClasses';
+const connection = mysql.createConnection({
+    host     : '127.0.0.1',
+    user     : 'root',
+    database : 'bookrentalsystem'
 });
 
-var db = admin.firestore();
+connection.connect();
 
-var docRef = db.collection('books').doc();
-
-var setBook = docRef.set({
-  isbn: '849302',
-  title: '吾輩は猫である',
-  actor: '夏目漱石',
-  date: new Date('2002-06-04')
-}).then((value)=>{
-  console.log(value);
-}).catch(error =>{
-  console.error(error);
+let sql = 'select * from bookrentalsystem.bookdetails';
+connection.query(sql, (err, rows, fields) => {
+  if (err) throw err; 
+  console.log((<BookDetail>rows[0]).serial);
 });
 
-console.log(db.collection('books').get().then((value)=>{
-  console.log(value.query.select(''));
-}))
+connection.end();

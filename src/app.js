@@ -1,23 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const admin = require("firebase-admin");
-var serviceAccount = require('../key/ateste-js-27fa5020b99d.json');
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+const mysql = require("mysql");
+const connection = mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'root',
+    database: 'bookrentalsystem'
 });
-var db = admin.firestore();
-var docRef = db.collection('books').doc();
-var setBook = docRef.set({
-    isbn: '849302',
-    title: '吾輩は猫である',
-    actor: '夏目漱石',
-    date: new Date('2002-06-04')
-}).then((value) => {
-    console.log(value);
-}).catch(error => {
-    console.error(error);
+connection.connect();
+let sql = 'select * from bookrentalsystem.bookdetails';
+connection.query(sql, (err, rows, fields) => {
+    if (err)
+        throw err;
+    console.log(rows[0].serial);
 });
-console.log(db.collection('books').get().then((value) => {
-    console.log(value.docs);
-}));
+connection.end();
 //# sourceMappingURL=app.js.map

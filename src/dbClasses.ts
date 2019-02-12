@@ -5,7 +5,7 @@ export class Book {
   public date = new Date;
   public detail?= new Array<BookDetail>();
   public picture?: ImageBitmap;
-  constructor(obj?: Book) {
+  constructor(obj?: Book) { 
     if(obj){
       this.isbn = obj.isbn;
       this.title = obj.title;
@@ -18,11 +18,11 @@ export class Book {
   }
 }
 export class Member {
+  public id: number;
   public name: string;
   public address: string;
   public tel: string;
   public email: string;
-  public id: number;
   constructor(obj?: Member) {
     if(obj){
       this.name = obj.name;
