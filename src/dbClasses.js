@@ -2,16 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Book {
     constructor(obj) {
-        this.date = new Date;
-        this.detail = new Array();
         if (obj) {
             this.isbn = obj.isbn;
             this.title = obj.title;
             this.actor = obj.actor;
             this.date = obj.date;
-            if (obj.detail) {
-                this.detail = obj.detail;
-            }
         }
     }
 }
@@ -31,9 +26,13 @@ exports.Member = Member;
 class BookDetail {
     constructor(obj) {
         if (obj) {
+            this.isbn = obj.isbn;
             this.serial = obj.serial;
-            this.status = obj.status;
-            this.date = obj.date;
+            if (obj.status) {
+                this.status = obj.status;
+                this.rentalDate = obj.rentalDate;
+                this.returnDate = obj.returnDate;
+            }
         }
     }
 }
@@ -41,13 +40,32 @@ exports.BookDetail = BookDetail;
 class RentHistory {
     constructor(obj) {
         if (obj) {
-            this.member = obj.member;
-            this.book = obj.book;
-            this.bookDetail = obj.bookDetail;
+            this.id = obj.id;
+            this.isbn = obj.isbn;
+            this.serial = obj.serial;
             this.type = obj.type;
             this.date = obj.date;
         }
     }
 }
 exports.RentHistory = RentHistory;
+class DataBase {
+    constructor() {
+        this.members = new Array();
+        this.books = new Array();
+        this.bookDetails = new Array();
+        this.histories = new Array();
+        // this.persons.push(new Member());
+        // this.books.push(new Book());
+        // this.bookDetails.push(new BookDetail());
+    }
+}
+exports.DataBase = DataBase;
+class Message extends DataBase {
+    constructor() {
+        super(...arguments);
+        this.message = '';
+    }
+}
+exports.Message = Message;
 //# sourceMappingURL=dbClasses.js.map

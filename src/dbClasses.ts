@@ -1,19 +1,15 @@
 export class Book {
-  public isbn: string;
+  public isbn: number;
   public title: string;
   public actor: string;
-  public date = new Date;
-  public detail?= new Array<BookDetail>();
+  public date: Date;
   public picture?: ImageBitmap;
-  constructor(obj?: Book) { 
-    if(obj){
+  constructor(obj?: Book) {
+    if (obj) {
       this.isbn = obj.isbn;
       this.title = obj.title;
       this.actor = obj.actor;
       this.date = obj.date;
-      if(obj.detail){
-        this.detail = obj.detail;
-      }
     }
   }
 }
@@ -24,7 +20,7 @@ export class Member {
   public tel: string;
   public email: string;
   constructor(obj?: Member) {
-    if(obj){
+    if (obj) {
       this.name = obj.name;
       this.address = obj.address;
       this.tel = obj.tel;
@@ -34,30 +30,53 @@ export class Member {
   }
 }
 export class BookDetail {
+  public isbn: number;
   public serial: number;
   public status?: number;
-  public date?: Date;
+  public rentalDate?: Date;
+  public returnDate?: Date;
   constructor(obj?: BookDetail) {
-    if(obj){
+    if (obj) {
+      this.isbn = obj.isbn;
       this.serial = obj.serial;
-      this.status = obj.status;
-      this.date = obj.date;
+      if (obj.status) {
+        this.status = obj.status;
+        this.rentalDate = obj.rentalDate;
+        this.returnDate = obj.returnDate;
+      }
     }
   }
 }
 export class RentHistory {
-  public member: Member;
-  public book: Book;
-  public bookDetail: BookDetail;
+  public id: number;
+  public isbn: number;
+  public serial: number;
   public type: string;
   public date: Date;
   constructor(obj?: RentHistory) {
-    if(obj){
-      this.member = obj.member;
-      this.book = obj.book;
-      this.bookDetail = obj.bookDetail;
+    if (obj) {
+      this.id = obj.id;
+      this.isbn = obj.isbn;
+      this.serial = obj.serial;
       this.type = obj.type;
       this.date = obj.date;
     }
   }
+}
+
+export class DataBase {
+    public members: Array<Member> = new Array<Member>();
+    public books: Array<Book> = new Array<Book>();
+    public bookDetails: Array<BookDetail> = new Array<BookDetail>();
+    public histories: Array<RentHistory> = new Array<RentHistory>();
+
+    constructor() {
+        // this.persons.push(new Member());
+        // this.books.push(new Book());
+        // this.bookDetails.push(new BookDetail());
+    }
+}
+
+export class Message extends DataBase {
+  public message = '';
 }
