@@ -61,11 +61,15 @@ class DataBase {
     }
 }
 exports.DataBase = DataBase;
+var reqtype;
+(function (reqtype) {
+    reqtype[reqtype["get"] = 0] = "get";
+    reqtype[reqtype["set"] = 1] = "set";
+    reqtype[reqtype["update"] = 2] = "update";
+    reqtype[reqtype["delete"] = 3] = "delete";
+    reqtype[reqtype["append"] = 4] = "append";
+})(reqtype = exports.reqtype || (exports.reqtype = {}));
 class Message extends DataBase {
-    constructor() {
-        super(...arguments);
-        this.message = '';
-    }
 }
 exports.Message = Message;
 //# sourceMappingURL=dbClasses.js.map
