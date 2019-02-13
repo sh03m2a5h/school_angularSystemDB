@@ -1,5 +1,5 @@
 import express = require("express");
-import { createConnection } from "mysql";
+import { createConnection, Connection } from "promise-mysql";
 import { createServer } from "http";
 import socket_io = require("socket.io");
 import {
@@ -7,8 +7,7 @@ import {
   Book,
   RentHistory,
   Member,
-  Message,
-  reqtype
+  DataBase
 } from "./dbClasses";
 
 const app = express();
@@ -16,39 +15,45 @@ app.use(express.static(__dirname + "/"));
 const server = createServer(app);
 // server.listen(80);
 const wss = socket_io(8080);
-const connection = createConnection({
+const conn = createConnection({
   host: "127.0.0.1",
   user: "root",
   database: "bookrentalsystem"
-});
-connection.connect();
-
-wss.on("connection", ws => {
-  console.log("connected");
-  ws.on("get", () => {
-    let database: Message = new Message();
-    database.message = reqtype.set;
-    connection.query("select * from bookrentalsystem.books", getBooks);
-    function getBooks(err, rows) {
-      if (err) throw err;
-      database.books = <Book[]>rows;
-      connection.query("select * from bookrentalsystem.members", getMembers);
-    }
-    function getMembers(err, rows) {
-      if (err) throw err;
-      database.members = <Member[]>rows;
-      connection.query("select * from bookrentalsystem.bookdetails", getBookDetails);
-    }
-    function getBookDetails(err, rows) {
-      if (err) throw err;
-      database.bookDetails = <BookDetail[]>rows;
-      connection.query("select * from bookrentalsystem.history", getHistories);
-    }
-    function getHistories(err, rows) {
-      if (err) throw err;
-      database.histories = <RentHistory[]>rows;
-      console.log(database);
-      ws.emit("set", database);
-    }
+}).then((connection) => {
+  wss.on("connection", ws => {
+    console.log("connected");
+    ws.on("get", () => {
+      console.log('get');
+      let database: DataBase = new DataBase();
+      connection.query("select * from bookrentalsystem.books")
+        .then((rows) => {
+          database.books = <Book[]>rows;
+          return connection.query("select * from bookrentalsystem.members");
+        }).then((rows) => {
+          database.members = <Member[]>rows;
+          return connection.query("select * from bookrentalsystem.bookdetails");
+        }).then((rows) => {
+          database.bookDetails = <BookDetail[]>rows;
+          return connection.query("select * from bookrentalsystem.histories");
+        }).then((rows) => {
+          database.histories = <RentHistory[]>rows;
+          ws.emit("set", database);
+        }).catch((err) => { throw err });
+    });
+    ws.on("append", (dataBase: DataBase) => {
+      console.log(dataBase);
+      Object.keys(dataBase).forEach((tablename) => {
+        if (typeof dataBase[tablename] === 'object' && dataBase[tablename][0]) {
+          console.log(tablename);
+          dataBase[tablename].forEach((rows: Book | BookDetail | Member | RentHistory) => {
+            connection.query(`insert into bookrentalsystem.${tablename} set ?`, rows).catch(err => {
+              ws.emit("err", err);
+              throw err;
+            });
+          });
+        }
+      });
+      wss.emit("append", dataBase);
+    });
   });
 });
