@@ -19,24 +19,22 @@ const conn = promise_mysql_1.createConnection({
         console.log("connected");
         ws.on("get", () => {
             console.log('get');
-            let database = new dbClasses_1.DataBase();
-            connection.query("select * from bookrentalsystem.books")
-                .then((rows) => {
-                database.books = rows;
-                return connection.query("select * from bookrentalsystem.members");
-            }).then((rows) => {
-                database.members = rows;
-                return connection.query("select * from bookrentalsystem.bookdetails");
-            }).then((rows) => {
-                database.bookDetails = rows;
-                return connection.query("select * from bookrentalsystem.histories");
-            }).then((rows) => {
-                database.histories = rows;
-                ws.emit("set", database);
-            }).catch((err) => { throw err; });
+            (async () => {
+                try {
+                    let database = new dbClasses_1.DataBase();
+                    database.books = await connection.query("select * from bookrentalsystem.books");
+                    database.members = await connection.query("select * from bookrentalsystem.members");
+                    database.bookDetails = await connection.query("select * from bookrentalsystem.bookDetails");
+                    database.histories = await connection.query("select * from bookrentalsystem.histories");
+                    ws.emit("set", database);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            })();
         });
         ws.on("append", (dataBase) => {
-            console.log(dataBase);
+            console.log(Object.keys(dbClasses_1.DataBase));
             Object.keys(dataBase).forEach((tablename) => {
                 if (typeof dataBase[tablename] === 'object' && dataBase[tablename][0]) {
                     console.log(tablename);

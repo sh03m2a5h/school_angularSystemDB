@@ -24,24 +24,21 @@ const conn = createConnection({
     console.log("connected");
     ws.on("get", () => {
       console.log('get');
-      let database: DataBase = new DataBase();
-      connection.query("select * from bookrentalsystem.books")
-        .then((rows) => {
-          database.books = <Book[]>rows;
-          return connection.query("select * from bookrentalsystem.members");
-        }).then((rows) => {
-          database.members = <Member[]>rows;
-          return connection.query("select * from bookrentalsystem.bookdetails");
-        }).then((rows) => {
-          database.bookDetails = <BookDetail[]>rows;
-          return connection.query("select * from bookrentalsystem.histories");
-        }).then((rows) => {
-          database.histories = <RentHistory[]>rows;
+      (async ()=>{
+        try {
+          let database: DataBase = new DataBase();
+          database.books = await connection.query("select * from bookrentalsystem.books");
+          database.members = await connection.query("select * from bookrentalsystem.members");
+          database.bookDetails = await connection.query("select * from bookrentalsystem.bookDetails");
+          database.histories = await connection.query("select * from bookrentalsystem.histories");
           ws.emit("set", database);
-        }).catch((err) => { throw err });
+        } catch(e) {
+          console.error(e);
+        }
+      })();
     });
     ws.on("append", (dataBase: DataBase) => {
-      console.log(dataBase);
+      console.log(Object.keys(DataBase));
       Object.keys(dataBase).forEach((tablename) => {
         if (typeof dataBase[tablename] === 'object' && dataBase[tablename][0]) {
           console.log(tablename);

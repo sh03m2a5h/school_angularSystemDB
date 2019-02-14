@@ -1,0 +1,33 @@
+{
+  "name": "school_angularsystemdb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sh03m2a5h/school_angularSystemDB.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sh03m2a5h/school_angularSystemDB/issues"
+  },
+  "homepage": "https://github.com/sh03m2a5h/school_angularSystemDB#readme",
+  "devDependencies": {
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@types/express": "^4.16.1",
+    "@types/mysql": "^2.15.5",
+    "@types/node": "^10.12.24",
+    "@types/socket.io": "^2.1.2",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0",
+    "promise-mysql": "^3.3.1",
+    "socket.io": "^2.2.0"
+  }
+}
