@@ -68,6 +68,11 @@ const conn = createConnection({
           await connection.query(`update bookrentalsystem.members set ? where id = ?`, [row, row.id]);
         }
       }
+      if (dataBase.histories[0]) {
+        for (let row of dataBase.histories) {
+          await connection.query(`insert into bookrentalsystem.histories set ?`, row);
+        }
+      }
       wss.emit('update', dataBase);
     });
     ws.on('drop', async (dataBase: DataBase) => {
