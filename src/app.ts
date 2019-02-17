@@ -1,17 +1,13 @@
 import express = require('express');
 import { createConnection, Connection } from 'promise-mysql';
 import { createServer } from 'http';
+import { join } from 'path';
 import socket_io = require('socket.io');
-import {
-  BookDetail,
-  Book,
-  RentHistory,
-  Member,
-  DataBase
-} from './dbClasses';
+import { DataBase } from './dbClasses';
 
 const app = express();
-app.use(express.static('public'));
+app.use(express.static(join(__dirname,'../public')));
+app.get('/*',(req,res) => res.sendFile(join(__dirname,'../public/index.html')));
 const server = createServer(app);
 server.listen(80);
 const wss = socket_io(8080);
